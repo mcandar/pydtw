@@ -2,8 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import cosine_distances, euclidean_distances
 
+def l1_norm(X,Y):
+    return np.sum(np.abs(X[:, None, :] - Y[None, :, :]), axis=2)
+
+def l2_norm(X,Y):
+    return np.sum((X[:, None, :] - Y[None, :, :])**2, axis=2)
+
+
 class DTW():
-    def __init__(self,X,Y,metric=euclidean_distances,step=120):
+    def __init__(self,X,Y,metric=l2_norm,step=120):
         self.X = X
         self.Y = Y
         self.metric = metric
@@ -127,14 +134,20 @@ class ddtw(dtw):
 if __name__ == 'main':
     import timeit
     
-    n = 1000
+    n = 120
     m = 50
     x = np.sin(np.linspace(0,2*np.pi,n+m))*3 + np.random.rand(n+m) + np.cos(np.linspace(0,5*np.pi,n+m))*2
     y = np.sin(np.linspace(0,2*np.pi,n))*3 + np.random.rand(n) + np.cos(np.linspace(0,5*np.pi,n))*1.5
 
-   %timeit dtw(x,y)
+    #%timeit dtw(x,y)
     ww = dtw(x,y)
     w = ddtw(x,y)
     
-    ww.plot()
-    w.plot()
+    #ww.plot()
+    #w.plot()
+
+#    x = x.reshape((-1,1))
+#    y = y.reshape((-1,1))
+#    %timeit euclidean_distances(x,y)
+#    %timeit l2_norm(x,y)
+#    %timeit l1_norm(x,y)
